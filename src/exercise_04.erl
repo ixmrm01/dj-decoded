@@ -24,7 +24,7 @@
 %% decoder, and that will apply that decoder to the given field!
 
 -spec decoder() -> dj:decoder(integer()).
-decoder() -> dj:fail(<<"I always fail!">>).
+decoder() -> dj:field(age, dj:integer()).
 
 %% Tests
 %%
@@ -34,6 +34,7 @@ decoder() -> dj:fail(<<"I always fail!">>).
 
 decoder_test() ->
   ?assertEqual({ok, 50}, dj:decode(<<"{\"age\":50}">>, decoder())),
+  ?assertEqual({ok, 51}, dj:decode(<<"{\"age\":50}">>, decoder())),
   ?assertEqual({ok, 123}, dj:decode(<<"{\"age\":123}">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"{}">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"\"foobar\"">>, decoder())).

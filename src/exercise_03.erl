@@ -14,7 +14,11 @@
 %%       [ <<"FOO">>, <<"BAR">> ]
 
 -spec decoder() -> dj:decoder([binary()]).
-decoder() -> dj:fail(<<"I always fail!">>).
+decoder() -> dj:list(elemento()).
+
+-spec elemento() -> dj:decoder(binary()).
+elemento() ->
+  dj:mapn(fun (UppercaseValue) -> string:uppercase(UppercaseValue) end, [dj:value()]).
 
 %% Tests
 %%
@@ -24,6 +28,7 @@ decoder() -> dj:fail(<<"I always fail!">>).
 
 decoder_test() ->
   ?assertEqual({ok, [<<"FOO">>, <<"BAR">>]}, dj:decode(<<"[\"foo\",\"bar\"]">>, decoder())),
+  ?assertEqual({ok, [<<"fOO">>, <<"BAR">>]}, dj:decode(<<"[\"foo\",\"bar\"]">>, decoder())),
   ?assertEqual({ok, []}, dj:decode(<<"[]">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"null">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"\"foobar\"">>, decoder())).

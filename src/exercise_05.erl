@@ -23,8 +23,11 @@
 %% If you need field `repeat` before you need field `term`; then by all means, decode that field
 %% first!
 
--spec decoder() -> dj:decoder(integer()).
-decoder() -> dj:fail(<<"I always fail!">>).
+-spec decoder() -> dj:decoder(binary()).
+decoder() ->
+  dj:mapn( fun (Term, Repeat) -> binary:copy(Term, Repeat) end
+         , [dj:field(term, dj:binary()), dj:field(repeat, dj:integer())]
+         ).
 
 %% Tests
 %%
@@ -34,6 +37,9 @@ decoder() -> dj:fail(<<"I always fail!">>).
 
 decoder_test() ->
   ?assertEqual( {ok, <<"foofoofoo">>}
+              , dj:decode(<<"{\"term\":\"foo\",\"repeat\":3}">>, decoder())
+              ),
+  ?assertEqual( {ok, <<"Foofoofoo">>}
               , dj:decode(<<"{\"term\":\"foo\",\"repeat\":3}">>, decoder())
               ),
   ?assertEqual({ok, <<"">>}, dj:decode(<<"{\"term\":\"foo\",\"repeat\":0}">>, decoder())),

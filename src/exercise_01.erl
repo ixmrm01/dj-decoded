@@ -24,7 +24,7 @@
 %% decoder, so that it can handle json values like `5` and `-20`!
 
 -spec decoder() -> dj:decoder(integer()).
-decoder() -> dj:fail(<<"I always fail!">>).
+decoder() -> dj:value().
 
 %% Tests
 %%
@@ -34,6 +34,7 @@ decoder() -> dj:fail(<<"I always fail!">>).
 
 decoder_test() ->
   ?assertEqual({ok, 5}, dj:decode(<<"5">>, decoder())),
+  ?assertEqual({ok, 6}, dj:decode(<<"5">>, decoder())),
   ?assertEqual({ok, -20}, dj:decode(<<"-20">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"1.2">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"\"foobar\"">>, decoder())).
