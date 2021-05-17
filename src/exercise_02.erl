@@ -19,7 +19,10 @@
 %%     [ <<"foo">>, <<"bar">>, <<"baz">> ]
 
 -spec decoder() -> dj:decoder([binary()]).
-decoder() -> dj:value().
+decoder() -> dj:list(elemento()).
+
+-spec elemento() -> dj:decoder(binary()).
+elemento() -> dj:value().
 
 %% Tests
 %%
@@ -31,9 +34,9 @@ decoder_test() ->
   ?assertEqual( {ok, [<<"foo">>, <<"bar">>, <<"baz">>]}
               , dj:decode(<<"[\"foo\",\"bar\",\"baz\"]">>, decoder())
               ),
-  ?assertEqual( {ok, [<<"Foo">>, <<"bar">>, <<"baz">>]}
-              , dj:decode(<<"[\"foo\",\"bar\",\"baz\"]">>, decoder())
-              ),
+  %?assertEqual( {ok, [<<"Foo">>, <<"bar">>, <<"baz">>]}
+  %, dj:decode(<<"[\"foo\",\"bar\",\"baz\"]">>, decoder())
+  %),
   ?assertEqual({ok, []}, dj:decode(<<"[]">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"null">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"\"foobar\"">>, decoder())).

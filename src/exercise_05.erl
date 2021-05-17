@@ -26,7 +26,7 @@
 -spec decoder() -> dj:decoder(binary()).
 decoder() ->
   dj:mapn( fun (Term, Repeat) -> binary:copy(Term, Repeat) end
-         , [dj:field(term, dj:binary()), dj:field(repeat, dj:integer())]
+         , [dj:field(term, dj:binary()), dj:field(repeat, dj:non_neg_integer())]
          ).
 
 %% Tests
@@ -39,9 +39,9 @@ decoder_test() ->
   ?assertEqual( {ok, <<"foofoofoo">>}
               , dj:decode(<<"{\"term\":\"foo\",\"repeat\":3}">>, decoder())
               ),
-  ?assertEqual( {ok, <<"Foofoofoo">>}
-              , dj:decode(<<"{\"term\":\"foo\",\"repeat\":3}">>, decoder())
-              ),
+  %?assertEqual( {ok, <<"Foofoofoo">>}
+  %, dj:decode(<<"{\"term\":\"foo\",\"repeat\":3}">>, decoder())
+  %),
   ?assertEqual({ok, <<"">>}, dj:decode(<<"{\"term\":\"foo\",\"repeat\":0}">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"{\"term\":\"foo\",\"repeat\":-1}">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"\"foobar\"">>, decoder())).

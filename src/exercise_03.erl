@@ -28,7 +28,7 @@ elemento() ->
 
 decoder_test() ->
   ?assertEqual({ok, [<<"FOO">>, <<"BAR">>]}, dj:decode(<<"[\"foo\",\"bar\"]">>, decoder())),
-  ?assertEqual({ok, [<<"fOO">>, <<"BAR">>]}, dj:decode(<<"[\"foo\",\"bar\"]">>, decoder())),
+  %?assertEqual({ok, [<<"fOO">>, <<"BAR">>]}, dj:decode(<<"[\"foo\",\"bar\"]">>, decoder())),
   ?assertEqual({ok, []}, dj:decode(<<"[]">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"null">>, decoder())),
   ?assertMatch({error, _}, dj:decode(<<"\"foobar\"">>, decoder())).
